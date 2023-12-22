@@ -4,11 +4,16 @@ body{
     overflow:hidden;
     display:flex;
     justify-content:center;
-    align-items:center;
+}
+
+#temporizador{
+    font-size: 100px;
+    margin-right: 10px;
 }
 
 #verticalButtons{
     display:flex;
+    justify-content: center;
     flex-direction:column;
 }
 

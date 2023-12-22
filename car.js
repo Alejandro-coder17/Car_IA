@@ -24,7 +24,7 @@ class Car{
                 Nivel 1: 6 neuronas
                 Nivel 2: 4 neuronas
                 */
-                [this.sensor.rayCount,6,4]
+                [this.sensor.rayCount,8,5,4]
             )
         }
         

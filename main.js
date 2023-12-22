@@ -1,10 +1,13 @@
 const carCanvas = document.getElementById('carCanvas');
 carCanvas.width = 200;
 const networkCanvas = document.getElementById('networkCanvas');
-networkCanvas.width = 300;
+networkCanvas.width = 500;
 
 const carCtx = carCanvas.getContext('2d');
 const networkCtx = networkCanvas.getContext("2d");
+const contador = parseInt(localStorage.getItem("contador"),10) || 0;
+//console.log(contador)
+let temporizador = document.getElementById('temporizador');
 
 const road = new Road(carCanvas.width/2, carCanvas.width*0.9);
 
@@ -16,7 +19,7 @@ if(localStorage.getItem("bestBrain")){
         cars[i].brain=JSON.parse(
             localStorage.getItem("bestBrain"));
         if(i!=0){
-            NeuralNetwork.mutate(cars[i].brain,0.1);
+            NeuralNetwork.mutate(cars[i].brain,0.25);
         }
     }
 }
@@ -31,7 +34,13 @@ const traffic=[
     new Car(road.getLaneCenter(2),-700,30,50,"DUMMY",2,getRandomColor()),
 ];
 
+if(!localStorage.getItem("bestCar")){
+    localStorage.setItem("bestCar", 100)
+}
+
 animate();
+correrTiempo();
+localStorage.setItem("contador", 0)
 
 function generateCars(N){
     const cars=[];
@@ -44,10 +53,33 @@ function generateCars(N){
 function save(){
     localStorage.setItem("bestBrain",
        JSON.stringify(bestCar.brain));
+    localStorage.setItem("bestCar",
+       JSON.stringify(bestCar.y));
  }
  
  function discard(){
     localStorage.removeItem("bestBrain");
+ }
+
+ function correrTiempo(){
+    setInterval(() =>{
+        temporizador.innerHTML-=1;
+    },1000)
+ }
+
+ window.addEventListener('beforeunload', reiniciar());
+
+ function reiniciar(){
+    localStorage.setItem("contador",contador+1);
+    const bestDistance = localStorage.getItem('bestCar');
+    if(contador >= 3 && bestDistance < bestCar.y){
+        localStorage.setItem("contador",0);
+        localStorage.setItem("bestCar",0);
+        discard();
+    }
+    else if(bestDistance >= bestCar.y){
+        localStorage.setItem("contador",0);
+    }
  }
 
 function animate() {
@@ -85,4 +117,14 @@ function animate() {
     //networkCtx.lineDashOffset=-time/50;
     Visualizer.drawNetwork(networkCtx,bestCar.brain);
     requestAnimationFrame(animate);
+
+    const store = localStorage.getItem('bestCar');
+    if(bestCar.y < store){
+        save()
+    }
+
+    //console.log(tiempoTranscurrido)
+    if(cars.length === 0 || temporizador.innerHTML==0){
+        location. reload()
+    }
 }
