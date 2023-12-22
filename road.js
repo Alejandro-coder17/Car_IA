@@ -31,7 +31,7 @@ class Road{
         ctx.lineWidth=5;
         ctx.strokeStyle="white";
 
-        for(let i=1;i<=this.laneCount-1;i++){
+        /*for(let i=1;i<=this.laneCount-1;i++){
             const x=lerp(
                 this.left,
                 this.right,
@@ -43,14 +43,17 @@ class Road{
             ctx.moveTo(x,this.top);
             ctx.lineTo(x,this.bottom);
             ctx.stroke();
-        }
+        }*/
 
-        ctx.setLineDash([]);
+        ctx.setLineDash([20,20]);
         this.borders.forEach(border=>{
             ctx.beginPath();
             ctx.moveTo(border[0].x,border[0].y);
-            ctx.lineTo(border[1].x,border[1].y);
+            for(let i=1;i<border.length;i++){
+                ctx.lineTo(border[i].x,border[i].y);
+            }
             ctx.stroke();
         });
+        ctx.setLineDash([]);
     }
 }
