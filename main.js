@@ -11,7 +11,7 @@ let temporizador = document.getElementById('temporizador');
 
 const road = new Road(carCanvas.width/2, carCanvas.width*0.9);
 
-const N=1000;
+const N=500;
 const cars=generateCars(N);
 let bestCar=cars[0];
 if(localStorage.getItem("bestBrain")){
@@ -72,13 +72,14 @@ function save(){
  function reiniciar(){
     localStorage.setItem("contador",contador+1);
     const bestDistance = localStorage.getItem('bestCar');
-    if(contador >= 3 && bestDistance < bestCar.y){
+    console.log(bestDistance);
+    console.log(bestCar.y);
+    if(Math.abs(bestDistance-bestCar.y)<=0.05){
+        localStorage.setItem("contador",0);
+    }else if(contador >= 3 && Math.abs(bestDistance-bestCar.y)>0.05){
         localStorage.setItem("contador",0);
         localStorage.setItem("bestCar",0);
         discard();
-    }
-    else if(bestDistance >= bestCar.y){
-        localStorage.setItem("contador",0);
     }
  }
 
